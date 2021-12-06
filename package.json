@@ -1,34 +1,22 @@
 {
-  "name": "@strapi/provider-upload-aws-s3",
-  "version": "4.0.0",
-  "description": "AWS S3 provider for strapi upload",
+  "name": "@mnightingale/strapi-provider-upload-aws-s3",
+  "version": "4.0.0-beta.1",
+  "description": "AWS S3 provider for strapi upload with additional configuration options",
   "keywords": [
     "upload",
     "aws",
     "s3",
     "strapi"
   ],
-  "homepage": "https://strapi.io",
   "bugs": {
-    "url": "https://github.com/strapi/strapi/issues"
+    "url": "https://github.com/mnightingale/strapi-provider-upload-aws-s3/issues"
   },
   "repository": {
     "type": "git",
-    "url": "git://github.com/strapi/strapi.git"
+    "url": "git://github.com/mnightingale/strapi-provider-upload-aws-s3.git"
   },
   "license": "SEE LICENSE IN LICENSE",
-  "author": {
-    "name": "Strapi Solutions SAS",
-    "email": "hi@strapi.io",
-    "url": "https://strapi.io"
-  },
-  "maintainers": [
-    {
-      "name": "Strapi Solutions SAS",
-      "email": "hi@strapi.io",
-      "url": "https://strapi.io"
-    }
-  ],
+  "author": "Michael Nightingale",
   "main": "./lib",
   "directories": {
     "lib": "./lib"
