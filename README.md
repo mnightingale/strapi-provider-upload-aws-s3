@@ -1,4 +1,9 @@
-# @strapi/provider-upload-aws-s3
+# @mnightingale/strapi-provider-upload-aws-s3
+
+Adds a few enhancements to the default [@strapi/provider-upload-aws-s3](https://github.com/strapi/strapi/tree/master/packages/providers/upload-aws-s3) provider namely:
+
+- Add a prefix to object paths
+- Set a custom URL to resolve objects to (e.g. a CDN such as CloudFront)
 
 ## Resources
 
@@ -15,10 +20,10 @@
 
 ```bash
 # using yarn
-yarn add @strapi/provider-upload-aws-s3
+yarn add @mnightingale/strapi-provider-upload-aws-s3
 
 # using npm
-npm install @strapi/provider-upload-aws-s3 --save
+npm install @mnightingale/strapi-provider-upload-aws-s3 --save
 ```
 
 ## Configurations
@@ -36,7 +41,7 @@ module.exports = ({ env }) => ({
   // ...
   upload: {
     config: {
-      provider: 'aws-s3',
+      provider: '@mnightingale/strapi-provider-upload-aws-s3',
       providerOptions: {
         accessKeyId: env('AWS_ACCESS_KEY_ID'),
         secretAccessKey: env('AWS_ACCESS_SECRET'),
@@ -44,6 +49,8 @@ module.exports = ({ env }) => ({
         params: {
           Bucket: env('AWS_BUCKET'),
         },
+        prefix: env('AWS_PREFIX'),
+        url: env('AWS_URL'),
       },
     },
   },
@@ -57,18 +64,28 @@ Due to the default settings in the Strapi Security Middleware you will need to m
 
 `./config/middlewares.js`
 
-````js
+```js
 module.exports = [
   // ...
   {
-    name: "strapi::security",
+    name: 'strapi::security',
     config: {
       contentSecurityPolicy: {
         useDefaults: true,
         directives: {
-          "connect-src": ["'self'", "https:"],
-          "img-src": ["'self'", "data:", "blob:", "yourBucketName.s3.yourRegion.amazonaws.com"],
-          "media-src": ["'self'", "data:", "blob:", "yourBucketName.s3.yourRegion.amazonaws.com"],
+          'connect-src': ["'self'", 'https:'],
+          'img-src': [
+            "'self'",
+            'data:',
+            'blob:',
+            'yourBucketName.s3.yourRegion.amazonaws.com',
+          ],
+          'media-src': [
+            "'self'",
+            'data:',
+            'blob:',
+            'yourBucketName.s3.yourRegion.amazonaws.com',
+          ],
           upgradeInsecureRequests: null,
         },
       },
@@ -76,6 +93,33 @@ module.exports = [
   },
   // ...
 ];
+```
+
+If you are using a custom URL you may want something more like
+
+```js
+module.exports = ({ env }) => {
+  const cdn = env('AWS_URL') ? [new URL(env('AWS_URL')).hostname] : [];
+
+  return [
+    // ...
+    {
+      name: 'strapi::security',
+      config: {
+        contentSecurityPolicy: {
+          directives: {
+            'connect-src': ["'self'", 'https:'],
+            'img-src': ["'self'", 'data:', 'blob:', ...cdn],
+            'media-src': ["'self'", 'data:', 'blob:', ...cdn],
+            upgradeInsecureRequests: null,
+          },
+        },
+      },
+    },
+    // ...
+  ];
+};
+```
 
 ## Required AWS Policy Actions
 
@@ -89,4 +133,4 @@ These are the minimum amount of permissions needed for this provider to work.
   "s3:DeleteObject",
   "s3:PutObjectAcl"
 ],
-````
+```
