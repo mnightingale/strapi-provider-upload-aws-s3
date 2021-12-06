@@ -25,8 +25,7 @@
     "test": "echo \"no tests yet\""
   },
   "dependencies": {
-    "aws-sdk": "2.892.0",
-    "lodash": "4.17.21"
+    "aws-sdk": "2.892.0"
   },
   "engines": {
     "node": ">=12.x.x <=16.x.x",
